@@ -4,21 +4,39 @@ export const Store = createContext();
 
 const initialState = {
   cart: {
-    cartItems: [],
+    cartItems: localStorage.getItem("cartItems")
+      ? JSON.parse(localStorage.getItem("cartItems"))
+      : [],
   },
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "CART_ADD_ITEM":
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          cartItems: [...state.cart.cartItems, action.payload],
-        },
-      };
+      const currentItem = action.payload;
+      const existItem = state.cart.cartItems.find(
+        (item) => item._id === currentItem._id
+      );
+      // If the item is in the cart, then update item with new quantity.
+      // Otherwise add the item to the end of the cart.
+      // currentItem is the current state of the clicked item.
+      // cartItems: [item1, item2]
+      const cartItems = existItem
+        ? state.cart.cartItems.map((item) =>
+            item._id === existItem._id ? currentItem : item
+          )
+        : [...state.cart.cartItems, currentItem];
 
+      // save current item to localStorage
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      // return the updated cartItem
+      return { ...state, cart: { ...state.cart, cartItems } };
+    case "CART_REMOVE_ITEM": {
+      const cartItems = state.cart.cartItems.filter(
+        (item) => item._id !== action.payload._id
+      );
+      return { ...state, cart: { ...state.cart, cartItems } };
+    }
     default:
       return state;
   }
