@@ -3,12 +3,15 @@ import { Form, Button } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../Store";
-import CheckoutSteps from "./CheckoutSteps";
+import CheckoutSteps from "../components/CheckoutSteps";
 
 function ShippingAddressScreen() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { userInfo, cart: shippingAddress } = state;
+  const {
+    userInfo,
+    cart: { shippingAddress },
+  } = state;
 
   const [fullName, setFullName] = useState(shippingAddress.fullName || "");
   const [address, setAddress] = useState(shippingAddress.address || "");
@@ -43,7 +46,7 @@ function ShippingAddressScreen() {
   return (
     <div>
       <Helmet>
-        <title>ShippingAddressScreen</title>
+        <title>Shipping Address</title>
       </Helmet>
       <CheckoutSteps step1 step2></CheckoutSteps>
       <div className="container small-container">
