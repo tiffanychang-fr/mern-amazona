@@ -26,6 +26,16 @@ orderRouter.post(
   })
 );
 
+// GET localhost:5000/api/orders/mine
+orderRouter.get(
+  "/mine",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const orders = await Order.find({ user: req.user._id });
+    res.send(orders);
+  })
+);
+
 // GET localhost:5000/api/orders/:id
 orderRouter.get(
   "/:id",
